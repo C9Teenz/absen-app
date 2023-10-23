@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:absensi/services/attendance_services.dart';
+import 'package:absensi/services/device_info_service.dart';
 import 'package:absensi/services/location_services.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
   Position? position;
   String? deviceModel;
   String? deviceId;
+  String? photoUrl;
   getUserData() async {
     await getLocation();
     await getDeviceInfo();
@@ -44,8 +46,7 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
   }
 
   getDeviceInfo() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    AndroidDeviceInfo androidInfo=await DeviceInfoService().getDeviceInfo();
     deviceModel = androidInfo.model;
     deviceId = androidInfo.id;
   }
@@ -65,10 +66,14 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
 
   doCheckIn() async {
     await AttendanceServices().checkIn(
+        photoUrl: photoUrl!,
         deviceModel: deviceModel!,
         deviceid: deviceId!,
         latitude: position!.latitude,
         longitude: position!.longitude,
         time: time);
+  }
+  doCheckOut()async{
+    await AttendanceServices().checkOut(latitude: position!.latitude,longitude: position!.longitude,photoUrl: photoUrl!);
   }
 }

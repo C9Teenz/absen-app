@@ -1,7 +1,10 @@
+import 'package:absensi/shared/widgets/custom_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/core.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -85,21 +88,14 @@ class EmployeeAttendenceView extends StatefulWidget {
                         const Divider(),
                         Row(
                           children: [
-                            Container(
+                            SizedBox(
                               height: 120.0,
                               width: 120.0,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    "https://images.unsplash.com/photo-1533050487297-09b450131914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    8.0, 
-                                  ),
-                                ),
+                              child: CustomImagePicker(
+                                label: "",
+                                onChanged: (p0) {
+                                  controller.photoUrl = p0;
+                                },
                               ),
                             ),
                             const SizedBox(
@@ -143,23 +139,59 @@ class EmployeeAttendenceView extends StatefulWidget {
                         const SizedBox(
                           height: 20.0,
                         ),
-                        CustomButton(
-                            text: "Check in",
-                            onPressed: () {
-                              controller.doCheckIn();
-                            },
-                            width: MediaQuery.of(context).size.width,
-                            icon: MdiIcons.doorOpen,
-                            color: const Color(0xff027aff)),
-                        const SizedBox(
-                          height: 12.0,
-                        ),
-                        CustomButton(
-                            text: "Check out",
-                            onPressed: () {},
-                            width: MediaQuery.of(context).size.width,
-                            icon: MdiIcons.doorOpen,
-                            color: const Color(0xff0e0c23))
+                        StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection("attendances")
+                              .where("user.uid",
+                                  isEqualTo:
+                                      FirebaseAuth.instance.currentUser!.uid)
+                              .where("attendance_date",
+                                  isEqualTo: DateFormat("d-MMM-y")
+                                      .format(DateTime.now()))
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) return const Text("Error");
+                            if (snapshot.data == null) return Container();
+
+                            final data = snapshot.data!;
+                            bool isCheckInToday = data.docs.isEmpty;
+                            return Container(
+                              child: Column(
+                                children: [
+                                  CustomButton(
+                                      text: "Check in",
+                                      onPressed: isCheckInToday
+                                          ? () {
+                                              controller.doCheckIn();
+                                              Navigator.pop(context);
+                                            }
+                                          : () {},
+                                      width: MediaQuery.of(context).size.width,
+                                      icon: MdiIcons.doorOpen,
+                                      color: isCheckInToday
+                                          ? const Color(0xff027aff)
+                                          : Colors.grey[300]!),
+                                  const SizedBox(
+                                    height: 12.0,
+                                  ),
+                                  CustomButton(
+                                      text: "Check out",
+                                      onPressed: isCheckInToday
+                                          ? () {}
+                                          : () {
+                                              controller.doCheckOut();
+                                              Navigator.pop(context);
+                                            },
+                                      width: MediaQuery.of(context).size.width,
+                                      icon: MdiIcons.doorClosed,
+                                      color: isCheckInToday
+                                          ? Colors.grey[300]!
+                                          : Colors.red)
+                                ],
+                              ),
+                            );
+                          },
+                        )
                       ],
                     ),
                   ),

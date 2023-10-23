@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/core.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class EmployeeDashboardView extends StatefulWidget {
@@ -102,7 +104,6 @@ class EmployeeDashboardView extends StatefulWidget {
                           viewportFraction: 1.0,
                           onPageChanged: (index, reason) {
                             controller.currentIndex = index;
-                            controller.setState(() {});
                           },
                         ),
                         items: images.map((imageUrl) {
@@ -189,19 +190,72 @@ class EmployeeDashboardView extends StatefulWidget {
                             ),
                           ],
                         ),
-                        CustomButton(
-                            text: "Check In",
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const EmployeeAttendenceView(),
-                                  ));
-                            },
-                            width: 180,
-                            icon: MdiIcons.doorOpen,
-                            color: const Color(0xff017aff))
+                        StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection("attendances")
+                                .where("user.uid",
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser!.uid)
+                                .where("attendance_date",
+                                    isEqualTo: DateFormat("d-MMM-y")
+                                        .format(DateTime.now()))
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) return const Text("Error");
+                              if (snapshot.data == null) return Container();
+
+                              final data = snapshot.data!;
+                              bool isCheckInToday = data.docs.isEmpty;
+
+                              if (isCheckInToday) {
+                                return CustomButton(
+                                    text: "Check In",
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EmployeeAttendenceView(),
+                                          ));
+                                    },
+                                    width: 180,
+                                    icon: MdiIcons.doorOpen,
+                                    color: const Color(0xff017aff));
+                              }
+                              final attendanceToday = data.docs.first.data()
+                                  as Map<String, dynamic>;
+                              bool isAttendToday =
+                                  attendanceToday["checkout_info"] != null;
+                              if (isAttendToday) {
+                                return CustomButton(
+                                    text: "Attend Today",
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EmployeeAttendenceView(),
+                                          ));
+                                    },
+                                    width: 180,
+                                    icon: MdiIcons.checkAll,
+                                    color: Colors.green[400]!);
+                              }
+
+                              return CustomButton(
+                                  text: "Check Out",
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const EmployeeAttendenceView(),
+                                        ));
+                                  },
+                                  width: 180,
+                                  icon: MdiIcons.doorOpen,
+                                  color: Colors.red);
+                            })
                       ],
                     )),
                 const SizedBox(
