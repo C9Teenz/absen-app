@@ -15,6 +15,8 @@ export 'package:absensi/module/employee/employee_main_navigation/view/employee_m
 export 'package:absensi/module/employee/employee_main_navigation/widget/custom_item_navbar.dart';
 export 'package:absensi/module/employee/employee_profile/controller/employee_profile_controller.dart';
 export 'package:absensi/module/employee/employee_profile/view/employee_profile_view.dart';
+export 'package:absensi/module/hrd/hrd_company_profile/controller/hrd_company_profile_controller.dart';
+export 'package:absensi/module/hrd/hrd_company_profile/view/hrd_company_profile_view.dart';
 export 'package:absensi/module/hrd/hrd_dashboard/controller/hrd_dashboard_controller.dart';
 export 'package:absensi/module/hrd/hrd_dashboard/view/hrd_dashboard_view.dart';
 export 'package:absensi/module/hrd/hrd_employee_form/controller/hrd_employee_form_controller.dart';
@@ -27,9 +29,18 @@ export 'package:absensi/module/hrd/hrd_profile/controller/hrd_profile_controller
 export 'package:absensi/module/hrd/hrd_profile/view/hrd_profile_view.dart';
 export 'package:absensi/module/login/controller/login_controller.dart';
 export 'package:absensi/module/login/view/login_view.dart';
+export 'package:absensi/services/attendance_services.dart';
 export 'package:absensi/services/auth_services.dart';
+export 'package:absensi/services/device_info_service.dart';
 export 'package:absensi/services/employee_services.dart';
+export 'package:absensi/services/location_services.dart';
+export 'package:absensi/setup.dart';
 export 'package:absensi/shared/widgets/custom_button.dart';
 export 'package:absensi/shared/widgets/custom_dialog.dart';
 export 'package:absensi/shared/widgets/custom_dropdown.dart';
+export 'package:absensi/shared/widgets/custom_image_picker.dart';
+export 'package:absensi/shared/widgets/location_picker/location_picker.dart';
+export 'package:absensi/shared/widgets/location_picker/location_picker_map_view.dart';
+export 'package:absensi/shared/widgets/location_picker/map_viewer.dart';
 export 'package:absensi/state_util.dart';
+export 'setup.dart';

@@ -1,6 +1,4 @@
-
 import 'package:absensi/module/login/view/login_view.dart';
-import 'package:absensi/state_util.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,7 +10,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-   Get.navigatorKey;
+
   runApp(const MainApp());
 }
 
@@ -21,7 +19,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
     return MaterialApp(
         theme: ThemeData(
             appBarTheme: const AppBarTheme(

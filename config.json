@@ -6,6 +6,7 @@
         "hrd/hrd_profile",
         "hrd/hrd_employee_list",
         "hrd/hrd_employee_form",
+        "hrd/hrd_company_profile",
         "employee/employee_main_navigation",
         "employee/employee_dashboard",
         "employee/employee_attendence",

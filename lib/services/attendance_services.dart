@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
 class AttendanceServices {
@@ -78,5 +79,24 @@ class AttendanceServices {
       }
     }
     return false;
+  }
+
+  Future<bool> calculateDistance(
+      {required double currentLat, required double currentLng}) async {
+    // Membuat objek Location
+    var companySnapshot = await FirebaseFirestore.instance
+        .collection("company_profile")
+        .doc("main-company")
+        .get();
+    Map<String, dynamic> locationSnapshot =
+        companySnapshot.data() as Map<String, dynamic>;
+    // Menghitung jarak antara dua lokasi
+    double distanceInMeters = GeolocatorPlatform.instance.distanceBetween(
+        currentLat,
+        currentLng,
+        locationSnapshot["latitude"],
+        locationSnapshot["longitude"]);
+    print(distanceInMeters);
+    return distanceInMeters > 100;
   }
 }

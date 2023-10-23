@@ -112,6 +112,8 @@ class HrdDashboardView extends StatefulWidget {
                           ),
                           Text(
                             item['label'],
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                                 fontSize: 14.0, color: Color(0xff0e0c23)),
                           ),

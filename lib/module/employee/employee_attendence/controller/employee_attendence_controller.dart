@@ -1,14 +1,10 @@
 import 'dart:async';
 
-import 'package:absensi/services/attendance_services.dart';
-import 'package:absensi/services/device_info_service.dart';
-import 'package:absensi/services/location_services.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/core.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import '../view/employee_attendence_view.dart';
 
 class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
   static late EmployeeAttendenceController instance;
@@ -46,7 +42,7 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
   }
 
   getDeviceInfo() async {
-    AndroidDeviceInfo androidInfo=await DeviceInfoService().getDeviceInfo();
+    AndroidDeviceInfo androidInfo = await DeviceInfoService().getDeviceInfo();
     deviceModel = androidInfo.model;
     deviceId = androidInfo.id;
   }
@@ -65,6 +61,19 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
   }
 
   doCheckIn() async {
+    if (position!.isMocked) {
+      if (context.mounted) {
+        return showCustomDialog(
+            dialog: "Your Potiotion is fake", context: context);
+      }
+    }
+    if (await isNotInvalidDistance()) {
+      if (context.mounted) {
+        return showCustomDialog(
+            dialog: "Your Potiotion is too far", context: context);
+      }
+    }
+
     await AttendanceServices().checkIn(
         photoUrl: photoUrl!,
         deviceModel: deviceModel!,
@@ -72,8 +81,31 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
         latitude: position!.latitude,
         longitude: position!.longitude,
         time: time);
+    if (context.mounted) Navigator.pop(context);
   }
-  doCheckOut()async{
-    await AttendanceServices().checkOut(latitude: position!.latitude,longitude: position!.longitude,photoUrl: photoUrl!);
+
+  doCheckOut() async {
+    if (position!.isMocked) {
+      if (context.mounted) {
+        return showCustomDialog(
+            dialog: "Your Potiotion is fake", context: context);
+      }
+    }
+    if (await isNotInvalidDistance()) {
+      if (context.mounted) {
+        return showCustomDialog(
+            dialog: "Your Potiotion is too far", context: context);
+      }
+    }
+    await AttendanceServices().checkOut(
+        latitude: position!.latitude,
+        longitude: position!.longitude,
+        photoUrl: photoUrl!);
+    if (context.mounted) Navigator.pop(context);
+  }
+
+  Future<bool> isNotInvalidDistance() async {
+    return AttendanceServices().calculateDistance(
+        currentLat: position!.latitude, currentLng: position!.longitude);
   }
 }

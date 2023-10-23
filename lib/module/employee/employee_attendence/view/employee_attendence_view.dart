@@ -1,4 +1,3 @@
-import 'package:absensi/shared/widgets/custom_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -162,8 +161,13 @@ class EmployeeAttendenceView extends StatefulWidget {
                                       text: "Check in",
                                       onPressed: isCheckInToday
                                           ? () {
-                                              controller.doCheckIn();
-                                              Navigator.pop(context);
+                                              if (controller.photoUrl == null) {
+                                                showCustomDialog(
+                                                    dialog: "Photo is required",
+                                                    context: context);
+                                              } else {
+                                                controller.doCheckIn();
+                                              }
                                             }
                                           : () {},
                                       width: MediaQuery.of(context).size.width,
@@ -179,8 +183,13 @@ class EmployeeAttendenceView extends StatefulWidget {
                                       onPressed: isCheckInToday
                                           ? () {}
                                           : () {
-                                              controller.doCheckOut();
-                                              Navigator.pop(context);
+                                              if (controller.photoUrl == null) {
+                                                showCustomDialog(
+                                                    dialog: "Photo is required",
+                                                    context: context);
+                                              } else {
+                                                controller.doCheckOut();
+                                              }
                                             },
                                       width: MediaQuery.of(context).size.width,
                                       icon: MdiIcons.doorClosed,
