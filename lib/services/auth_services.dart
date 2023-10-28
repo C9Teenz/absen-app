@@ -58,8 +58,9 @@ class AuthServices {
       var userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
-      bool isNotRegistered=await EmployeeServices().isNotRegister(userCredential.user!.email!);
-      if(isNotRegistered){
+      bool isNotRegistered =
+          await EmployeeServices().isNotRegister(userCredential.user!.email!);
+      if (isNotRegistered) {
         await FirebaseAuth.instance.signOut();
         throw Exception('Anda belum terdaftar');
       }
@@ -70,5 +71,9 @@ class AuthServices {
 
   logout() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+ User? get currentUser {
+    return FirebaseAuth.instance.currentUser;
   }
 }

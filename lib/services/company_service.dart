@@ -14,4 +14,8 @@ class CompanyService{
       "longitude": longitude,
     });
   }
+
+   Stream<QuerySnapshot<Object?>>? companySnapshot(){
+    return FirebaseFirestore.instance.collection("company_profile").snapshots();
+  }
 }

@@ -31,6 +31,11 @@ class EmployeeServices {
     }
     return false;
   }
+
+  Stream<QuerySnapshot<Object?>>? employeeSnapshot(){
+    return FirebaseFirestore.instance.collection("employees").snapshots();
+  }
+ 
 }
 
 //@m.nama =>alt+shift+e

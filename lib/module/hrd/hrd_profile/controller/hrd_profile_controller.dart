@@ -19,13 +19,6 @@ class HrdProfileController extends State<HrdProfileView> {
 
   doLogout() async {
     await AuthServices().logout();
-    if (context.mounted) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoginView(),
-          ),
-          (route) => false);
-    }
+    Get.offAll(const LoginView());
   }
 }

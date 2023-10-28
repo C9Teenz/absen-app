@@ -19,9 +19,7 @@ class HrdEmployeeListView extends StatefulWidget {
           children: [
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection("employees")
-                    .snapshots(),
+                stream: EmployeeServices().employeeSnapshot(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) return const Text("Error");
                   if (snapshot.data == null) return Container();

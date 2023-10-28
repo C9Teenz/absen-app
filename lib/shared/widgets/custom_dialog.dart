@@ -3,10 +3,12 @@
 
 import 'package:flutter/material.dart';
 
+import '../../state_util.dart';
+
 Future showCustomDialog(
-    {required String dialog, required BuildContext context}) async {
+    {required String dialog}) async {
   return showDialog(
-    context: context,
+    context: globalContext,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Alert!'),

@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/core.dart';
-import '../controller/hrd_dashboard_controller.dart';
 
 class HrdDashboardView extends StatefulWidget {
   const HrdDashboardView({Key? key}) : super(key: key);
@@ -30,7 +28,7 @@ class HrdDashboardView extends StatefulWidget {
                             ),
                           ),
                           Text(
-                            FirebaseAuth.instance.currentUser!.displayName!,
+                            AuthServices().currentUser!.displayName!,
                             style: const TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,

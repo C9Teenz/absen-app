@@ -60,20 +60,36 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
     });
   }
 
-  doCheckIn() async {
+  Future<bool> doValidate() async {
+    if (photoUrl == null) {
+      showCustomDialog(
+        dialog: "Please take a photo",
+      );
+      return false;
+    }
     if (position!.isMocked) {
-      if (context.mounted) {
-        return showCustomDialog(
-            dialog: "Your Potiotion is fake", context: context);
-      }
+      showCustomDialog(
+        dialog: "Your Potiotion is fake",
+      );
+      return false;
     }
     if (await isNotInvalidDistance()) {
-      if (context.mounted) {
-        return showCustomDialog(
-            dialog: "Your Potiotion is too far", context: context);
-      }
+      showCustomDialog(dialog: "Your Potiotion is too far");
+      return false;
     }
+    if (await SecurityService().isNoFaceDetected(photoUrl!)) {
+      showCustomDialog(dialog: "No face detected");
+      return false;
+    }
+    return true;
+  }
 
+  doCheckIn() async {
+    showLoading();
+    if (!await doValidate()) {
+      hideLoading();
+      return;
+    }
     await AttendanceServices().checkIn(
         photoUrl: photoUrl!,
         deviceModel: deviceModel!,
@@ -81,27 +97,17 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
         latitude: position!.latitude,
         longitude: position!.longitude,
         time: time);
-    if (context.mounted) Navigator.pop(context);
+    hideLoading();
+    Get.back();
   }
 
   doCheckOut() async {
-    if (position!.isMocked) {
-      if (context.mounted) {
-        return showCustomDialog(
-            dialog: "Your Potiotion is fake", context: context);
-      }
-    }
-    if (await isNotInvalidDistance()) {
-      if (context.mounted) {
-        return showCustomDialog(
-            dialog: "Your Potiotion is too far", context: context);
-      }
-    }
+    if (!await doValidate()) return;
     await AttendanceServices().checkOut(
         latitude: position!.latitude,
         longitude: position!.longitude,
         photoUrl: photoUrl!);
-    if (context.mounted) Navigator.pop(context);
+    Get.back();
   }
 
   Future<bool> isNotInvalidDistance() async {

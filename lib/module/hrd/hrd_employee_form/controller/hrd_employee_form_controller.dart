@@ -1,4 +1,3 @@
-import 'package:absensi/services/employee_services.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/core.dart';
 
@@ -26,11 +25,9 @@ class HrdEmployeeFormController extends State<HrdEmployeeFormView> {
     try {
       await EmployeeServices()
           .add(fullName: fullName!, email: email!, position: position!);
-      if (context.mounted) {
-        Navigator.pop(context);
-      }
+      Get.back();
     } on Exception {
-      showCustomDialog(dialog: "Invalid Email", context: context);
+      showCustomDialog(dialog: "Invalid Email");
     }
   }
 }

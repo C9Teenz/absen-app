@@ -59,9 +59,9 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
 
   Future<String?> getFileAndroidIosAndWeb() async {
     XFile? image = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 40,
-    );
+        source: ImageSource.gallery,
+        imageQuality: 40,
+        preferredCameraDevice: CameraDevice.front);
     String? filePath = image?.path;
     if (filePath == null) return null;
     return filePath;

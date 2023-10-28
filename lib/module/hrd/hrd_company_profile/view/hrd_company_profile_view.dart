@@ -1,3 +1,4 @@
+import 'package:absensi/services/company_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/core.dart';
@@ -17,9 +18,7 @@ class HrdCompanyProfileView extends StatefulWidget {
         child: Container(
           padding: const EdgeInsets.all(10.0),
           child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection("company_profile")
-                .snapshots(),
+            stream: CompanyService().companySnapshot(),
             builder: (context, snapshot) {
               if (snapshot.hasError) return const Text("Error");
               if (snapshot.data == null) return Container();
@@ -87,7 +86,7 @@ class HrdCompanyProfileView extends StatefulWidget {
               bool isValidated = controller.formKey.currentState!.validate();
               if (!isValidated) {
                 showCustomDialog(
-                    dialog: "Please Fill required field", context: context);
+                    dialog: "Please Fill required field");
               } else {
                 controller.doSave();
                 Navigator.pop(context);

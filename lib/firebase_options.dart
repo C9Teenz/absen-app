@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD27pe6BEbjJ9yiFttfdYuEz4YPB6M_EPU',
-    appId: '1:632794058182:android:656df1dbe907b87055f6c7',
+    appId: '1:632794058182:android:265a26e8d67ae25f55f6c7',
     messagingSenderId: '632794058182',
     projectId: 'absen-app-cc7b3',
     storageBucket: 'absen-app-cc7b3.appspot.com',

@@ -21,20 +21,9 @@ class LoginController extends State<LoginView> {
     try {
       await AuthServices().doHRDLogin();
 
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HrdMainNavigationView(),
-          ),
-          (route) => false,
-        );
-      }
+      Get.offAll(const HrdMainNavigationView());
     } on Exception {
-      showCustomDialog(
-        dialog: "Unauthorized Access!",
-        context: context,
-      );
+      showCustomDialog(dialog: "Unauthorized Access!");
     }
   }
 
@@ -42,19 +31,9 @@ class LoginController extends State<LoginView> {
     try {
       await AuthServices().doEmployeeLogin();
 
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const EmployeeMainNavigationView(),
-            ),
-            (route) => false);
-      }
+      Get.offAll(const EmployeeMainNavigationView());
     } on Exception {
-      showCustomDialog(
-        dialog: "Unauthorized Access!",
-        context: context,
-      );
+      showCustomDialog(dialog: "Unauthorized Access!");
     }
   }
 }

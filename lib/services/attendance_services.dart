@@ -28,19 +28,6 @@ class AttendanceServices {
     });
   }
 
-  Future<bool> isCheckInToday() async {
-    var data = await FirebaseFirestore.instance
-        .collection("attendances")
-        .where("user.uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where("attendance_date",
-            isEqualTo: DateFormat("d-MMM-y").format(DateTime.now()))
-        .get();
-    if (data.docs.isNotEmpty) {
-      return true;
-    }
-    return false;
-  }
-
   checkOut(
       {required double latitude,
       required double longitude,
@@ -66,19 +53,13 @@ class AttendanceServices {
     }
   }
 
-  Future<bool> isCheckOutToday() async {
-    var data = await FirebaseFirestore.instance
+  Stream<QuerySnapshot<Object?>>? attendanceSnapshot() {
+    return FirebaseFirestore.instance
         .collection("attendances")
         .where("user.uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .where("attendance_date",
             isEqualTo: DateFormat("d-MMM-y").format(DateTime.now()))
-        .get();
-    if (data.docs.isNotEmpty) {
-      if (data.docs.first.data()["checkout_time"] != null) {
-        return true;
-      }
-    }
-    return false;
+        .snapshots();
   }
 
   Future<bool> calculateDistance(

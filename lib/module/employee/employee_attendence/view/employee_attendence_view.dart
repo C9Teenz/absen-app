@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/core.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -105,8 +103,7 @@ class EmployeeAttendenceView extends StatefulWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    FirebaseAuth
-                                        .instance.currentUser!.displayName!,
+                                    AuthServices().currentUser!.displayName!,
                                     style: const TextStyle(
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.bold,
@@ -139,15 +136,7 @@ class EmployeeAttendenceView extends StatefulWidget {
                           height: 20.0,
                         ),
                         StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection("attendances")
-                              .where("user.uid",
-                                  isEqualTo:
-                                      FirebaseAuth.instance.currentUser!.uid)
-                              .where("attendance_date",
-                                  isEqualTo: DateFormat("d-MMM-y")
-                                      .format(DateTime.now()))
-                              .snapshots(),
+                          stream: AttendanceServices().attendanceSnapshot(),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) return const Text("Error");
                             if (snapshot.data == null) return Container();
@@ -163,8 +152,8 @@ class EmployeeAttendenceView extends StatefulWidget {
                                           ? () {
                                               if (controller.photoUrl == null) {
                                                 showCustomDialog(
-                                                    dialog: "Photo is required",
-                                                    context: context);
+                                                  dialog: "Photo is required",
+                                                );
                                               } else {
                                                 controller.doCheckIn();
                                               }
@@ -185,8 +174,8 @@ class EmployeeAttendenceView extends StatefulWidget {
                                           : () {
                                               if (controller.photoUrl == null) {
                                                 showCustomDialog(
-                                                    dialog: "Photo is required",
-                                                    context: context);
+                                                  dialog: "Photo is required",
+                                                );
                                               } else {
                                                 controller.doCheckOut();
                                               }

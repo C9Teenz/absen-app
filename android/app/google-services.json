@@ -7,20 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:632794058182:android:656df1dbe907b87055f6c7",
+        "mobilesdk_app_id": "1:632794058182:android:265a26e8d67ae25f55f6c7",
         "android_client_info": {
           "package_name": "com.example.absensi"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "632794058182-tasqp8rv05g68dt434tmpodca9r3ta58.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.absensi",
-            "certificate_hash": "2d4727037892dd4d1a6b8f5b63937a88b37be1f6"
-          }
-        },
         {
           "client_id": "632794058182-tsiln3623igeh6a2t8ef6u0jckj93cp0.apps.googleusercontent.com",
           "client_type": 3

@@ -1,9 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/core.dart';
-import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class EmployeeDashboardView extends StatefulWidget {
@@ -32,7 +30,7 @@ class EmployeeDashboardView extends StatefulWidget {
                             ),
                           ),
                           Text(
-                            FirebaseAuth.instance.currentUser!.displayName!,
+                            AuthServices().currentUser!.displayName!,
                             style: const TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -191,15 +189,7 @@ class EmployeeDashboardView extends StatefulWidget {
                           ],
                         ),
                         StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection("attendances")
-                                .where("user.uid",
-                                    isEqualTo:
-                                        FirebaseAuth.instance.currentUser!.uid)
-                                .where("attendance_date",
-                                    isEqualTo: DateFormat("d-MMM-y")
-                                        .format(DateTime.now()))
-                                .snapshots(),
+                            stream: AttendanceServices().attendanceSnapshot(),
                             builder: (context, snapshot) {
                               if (snapshot.hasError) return const Text("Error");
                               if (snapshot.data == null) return Container();

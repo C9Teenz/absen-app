@@ -4,6 +4,7 @@ If there is a conflicting class name in this file,
 it means you have to rename it to something more unique.
 */
 export 'package:absensi/firebase_options.dart';
+
 export 'package:absensi/module/employee/employee_attendence/controller/employee_attendence_controller.dart';
 export 'package:absensi/module/employee/employee_attendence/view/employee_attendence_view.dart';
 export 'package:absensi/module/employee/employee_attendence_history/controller/employee_attendence_history_controller.dart';
@@ -31,14 +32,17 @@ export 'package:absensi/module/login/controller/login_controller.dart';
 export 'package:absensi/module/login/view/login_view.dart';
 export 'package:absensi/services/attendance_services.dart';
 export 'package:absensi/services/auth_services.dart';
+export 'package:absensi/services/company_service.dart';
 export 'package:absensi/services/device_info_service.dart';
 export 'package:absensi/services/employee_services.dart';
 export 'package:absensi/services/location_services.dart';
+export 'package:absensi/services/security_service.dart';
 export 'package:absensi/setup.dart';
 export 'package:absensi/shared/widgets/custom_button.dart';
 export 'package:absensi/shared/widgets/custom_dialog.dart';
 export 'package:absensi/shared/widgets/custom_dropdown.dart';
 export 'package:absensi/shared/widgets/custom_image_picker.dart';
+export 'package:absensi/shared/widgets/loading/show_loading.dart';
 export 'package:absensi/shared/widgets/location_picker/location_picker.dart';
 export 'package:absensi/shared/widgets/location_picker/location_picker_map_view.dart';
 export 'package:absensi/shared/widgets/location_picker/map_viewer.dart';

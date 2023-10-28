@@ -11,7 +11,8 @@
         "employee/employee_dashboard",
         "employee/employee_attendence",
         "employee/employee_attendence_history",
-        "employee/employee_profile"
+        "employee/employee_profile",
+        "debug"
     ],
     "module_directory_name": "module",
     "experimental_mode": false,
