@@ -53,7 +53,7 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
   getTime() {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       DateTime date = DateTime.now();
-      time = DateFormat("HH:mm:ss").format(date);
+      time = DateFormat("HH:mm").format(date);
       dateString = DateFormat("d MMMM y").format(date);
 
       setState(() {});
@@ -62,22 +62,26 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
 
   Future<bool> doValidate() async {
     if (photoUrl == null) {
+      hideLoading();
       showCustomDialog(
         dialog: "Please take a photo",
       );
       return false;
     }
     if (position!.isMocked) {
+      hideLoading();
       showCustomDialog(
         dialog: "Your Potiotion is fake",
       );
       return false;
     }
     if (await isNotInvalidDistance()) {
+      hideLoading();
       showCustomDialog(dialog: "Your Potiotion is too far");
       return false;
     }
     if (await SecurityService().isNoFaceDetected(photoUrl!)) {
+      hideLoading();
       showCustomDialog(dialog: "No face detected");
       return false;
     }
@@ -87,7 +91,6 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
   doCheckIn() async {
     showLoading();
     if (!await doValidate()) {
-      hideLoading();
       return;
     }
     await AttendanceServices().checkIn(
@@ -102,11 +105,18 @@ class EmployeeAttendenceController extends State<EmployeeAttendenceView> {
   }
 
   doCheckOut() async {
-    if (!await doValidate()) return;
+    showLoading();
+    if (!await doValidate()) {
+      return;
+    }
     await AttendanceServices().checkOut(
+        photoUrl: photoUrl!,
+        deviceModel: deviceModel!,
+        deviceid: deviceId!,
         latitude: position!.latitude,
         longitude: position!.longitude,
-        photoUrl: photoUrl!);
+        time: time);
+    hideLoading();
     Get.back();
   }
 

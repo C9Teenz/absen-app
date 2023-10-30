@@ -12,14 +12,16 @@ class AttendanceServices {
       required String time,
       required String photoUrl}) async {
     await FirebaseFirestore.instance.collection("attendances").add({
-      "device_model": deviceModel,
-      "device_id": deviceid,
-      "latitude": latitude,
-      "longitude": longitude,
-      "time": time,
-      "date": Timestamp.now(),
-      "attendance_date": DateFormat("d-MMM-y").format(DateTime.now()),
-      "photo_url": photoUrl,
+      "checkin_info": {
+        "device_model": deviceModel,
+        "device_id": deviceid,
+        "latitude": latitude,
+        "longitude": longitude,
+        "time": time,
+        "date": Timestamp.now(),
+        "attendance_date": DateFormat("d-MMM-y").format(DateTime.now()),
+        "photo_url": photoUrl,
+      },
       "user": {
         "uid": FirebaseAuth.instance.currentUser!.uid,
         "email": FirebaseAuth.instance.currentUser!.email,
@@ -29,13 +31,16 @@ class AttendanceServices {
   }
 
   checkOut(
-      {required double latitude,
+      {required String deviceModel,
+      required String deviceid,
+      required double latitude,
       required double longitude,
+      required String time,
       required String photoUrl}) async {
     var data = await FirebaseFirestore.instance
         .collection("attendances")
         .where("user.uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where("attendance_date",
+        .where("checkin_info.attendance_date",
             isEqualTo: DateFormat("d-MMM-y").format(DateTime.now()))
         .get();
     if (data.docs.isNotEmpty) {
@@ -44,10 +49,14 @@ class AttendanceServices {
           .doc(data.docs.first.id)
           .update({
         "checkout_info": {
+          "device_model": deviceModel,
+          "device_id": deviceid,
           "latitude": latitude,
           "longitude": longitude,
-          "photo_url": photoUrl,
+          "time": time,
           "date": Timestamp.now(),
+          "attendance_date": DateFormat("d-MMM-y").format(DateTime.now()),
+          "photo_url": photoUrl,
         },
       });
     }
@@ -57,8 +66,17 @@ class AttendanceServices {
     return FirebaseFirestore.instance
         .collection("attendances")
         .where("user.uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where("attendance_date",
+        .where("checkin_info.attendance_date",
             isEqualTo: DateFormat("d-MMM-y").format(DateTime.now()))
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Object?>>? attendanceHistorySnapshot({required DateTime date}) {
+    return FirebaseFirestore.instance
+        .collection("attendances")
+        .where("user.uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where("checkin_info.attendance_date",
+            isEqualTo: DateFormat("d-MMM-y").format(date))
         .snapshots();
   }
 
